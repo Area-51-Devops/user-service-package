@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    uses: Area-51-Devops/shared-lib/.github/workflows/common-ci.yml@main
+    with:
+      working_directory: '.'
+      image_name: 'user-service'
+      run_build: false
+      sonar_project_key: 'NexusBank'
+      docker_context: '.'
+      dockerfile_path: 'Dockerfile'
+      service-name: 'user-service'
+    secrets: inherit
