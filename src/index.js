@@ -252,8 +252,12 @@ async function shutdown(signal) {
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT',  () => shutdown('SIGINT'));
 
-init().catch(err => {
-  logger.fatal({ err }, 'user-service failed to initialise');
-  process.exit(1);
-});
+(async () => {
+  try {
+    await init();
+  } catch (err) {
+    logger.fatal({ err }, 'user-service failed to initialise');
+    process.exit(1);
+  }
+})();
 
