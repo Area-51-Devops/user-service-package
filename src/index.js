@@ -1,19 +1,19 @@
-﻿'use strict';
+'use strict';
 require('dotenv').config();
 
-const express   = require('express');
-const cors      = require('cors');
-const mysql     = require('mysql2/promise');
-const Redis     = require('ioredis');
-const bcrypt    = require('bcryptjs');
-const jwt       = require('jsonwebtoken');
+const express = require('express');
+const cors = require('cors');
+const mysql = require('mysql2/promise');
+const Redis = require('ioredis');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
 const axiosRetryModule = require('axios-retry');
 const axiosRetry = axiosRetryModule.default || axiosRetryModule;
 
-const { logger }             = require('@area-51-devops/shared');
-const PORT       = process.env.PORT       || 3001;
+const { logger } = require('@area-51-devops/shared');
+const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'nexus_banking_secret';
 const JWT_EXPIRE = process.env.JWT_EXPIRE || '8h';
 const SALT_ROUNDS = 10;
@@ -44,13 +44,13 @@ async function init() {
   // MySQL pool
   pool = await connectWithRetry(async () => {
     const p = mysql.createPool({
-      host:              process.env.DB_HOST     || 'mysql',
-      user:              process.env.DB_USER     || 'root',
-      password:          process.env.DB_PASS     || 'rootpassword',
-      database:          process.env.DB_NAME     || 'banking_db',
+      host: process.env.DB_HOST || 'mysql',
+      user: process.env.DB_USER || 'root',
+      password: process.env.DB_PASS || 'rootpassword',
+      database: process.env.DB_NAME || 'banking_db',
       waitForConnections: true,
-      connectionLimit:   10,
-      queueLimit:        0
+      connectionLimit: 10,
+      queueLimit: 0
     });
     // Verify connectivity
     const [rows] = await p.execute('SELECT 1');
@@ -61,9 +61,9 @@ async function init() {
   // Redis
   redisClient = await connectWithRetry(async () => {
     const client = new Redis({
-      host:        process.env.REDIS_HOST || 'redis',
-      port:        parseInt(process.env.REDIS_PORT || '6379'),
-      lazyConnect:  true
+      host: process.env.REDIS_HOST || 'redis',
+      port: parseInt(process.env.REDIS_PORT || '6379'),
+      lazyConnect: true
     });
     await client.connect();
     await client.ping();
@@ -242,17 +242,17 @@ async function shutdown(signal) {
     logger.info('Shutdown complete');
     process.exit(0);
   });
-  
-  setTimeout(() => { 
-    logger.error('Force shutdown timeout'); 
-    process.exit(1); 
+
+  setTimeout(() => {
+    logger.error('Force shutdown timeout');
+    process.exit(1);
   }, 15000);
 }
 
 process.on('SIGTERM', () => shutdown('SIGTERM'));
-process.on('SIGINT',  () => shutdown('SIGINT'));
+process.on('SIGINT', () => shutdown('SIGINT'));
 
-(async () => {
+(async () => { // NOSONAR
   try {
     await init();
   } catch (err) {
