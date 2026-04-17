@@ -16,6 +16,7 @@ RUN --mount=type=secret,id=npm_token \
   rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
 
 COPY src ./src
+COPY ../shared ./shared
 
 USER node
 
