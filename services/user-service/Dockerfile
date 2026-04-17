@@ -7,7 +7,7 @@ RUN apk update && apk upgrade --no-cache
 
 COPY package*.json ./
 
-# We mount a docker secret file representing the token during the run
+# We mount a docker secret file representing the token during the run.
 RUN --mount=type=secret,id=npm_token \
   echo "//npm.pkg.github.com/:_authToken=$(cat /run/secrets/npm_token)" > .npmrc && \
   (npm ci --omit=dev || npm install --omit=dev) && \
