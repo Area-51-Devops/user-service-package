@@ -7,13 +7,12 @@ const mysql = require('mysql2/promise');
 const Redis = require('ioredis');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
 const axiosRetryModule = require('axios-retry');
 const axiosRetry = axiosRetryModule.default || axiosRetryModule;
 
 const { logger } = require('@area-51-devops/shared');
-const { errorMiddleware } = require('../shared/errorMiddleware');
+const { errorMiddleware, createError } = require('../shared/errorMiddleware');
 const { requestIdMiddleware } = require('../shared/requestId');
 
 const PORT = process.env.PORT || 3001;
@@ -29,13 +28,6 @@ let pool;
 let redisClient;
 let isStarted = false;   // used by /health/startup
 
-// Helper function to create error responses
-function createError(statusCode, code, message) {
-  const err = new Error(message);
-  err.statusCode = statusCode;
-  err.code = code;
-  return err;
-}
 
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Exponential backoff connector
