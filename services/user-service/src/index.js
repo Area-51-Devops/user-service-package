@@ -11,7 +11,7 @@ const axios = require('axios');
 const axiosRetryModule = require('axios-retry');
 const axiosRetry = axiosRetryModule.default || axiosRetryModule;
 
-const { logger } = require('@area-51-devops/shared');
+const { logger } = require('../shared/logger');
 const { errorMiddleware, createError } = require('../shared/errorMiddleware');
 const { requestIdMiddleware } = require('../shared/requestId');
 
