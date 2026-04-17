@@ -38,9 +38,9 @@ async function connectWithRetry(connectFn, name, maxRetries = 10) {
       const result = await connectFn();
       logger.info({ service: 'user-service' }, `${name} connected`);
       return result;
-    } catch (err) {
+    } catch (error_) {
       const delay = Math.min(1000 * Math.pow(2, attempt - 1), 30000);
-      logger.warn({ service: 'user-service', attempt, delay }, `${name} not ready, retrying in ${delay}ms`);
+      logger.warn({ service: 'user-service', attempt, delay, error: error_.message }, `${name} not ready, retrying in ${delay}ms`);
       if (attempt === maxRetries) throw new Error(`${name} failed after ${maxRetries} retries`);
       await new Promise(r => setTimeout(r, delay));
     }
@@ -263,10 +263,10 @@ async function shutdown(signal) {
   logger.info({ signal }, 'Graceful shutdown initiated');
   server.close(async () => {
     try {
-      if (typeof pool !== 'undefined' && pool) await pool.end();
-      if (typeof redisClient !== 'undefined' && redisClient) await redisClient.quit();
-    } catch (err) {
-      logger.error({ err }, 'Error during graceful shutdown connections close');
+      if (pool !== undefined && pool) await pool.end();
+      if (redisClient !== undefined && redisClient) await redisClient.quit();
+    } catch (error_) {
+      logger.error({ err: error_.message }, 'Error during graceful shutdown connections close');
     }
     logger.info('Shutdown complete');
     process.exit(0);
