@@ -85,6 +85,9 @@ async function init() {
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const app = express();
 
+// Disable X-Powered-By header to prevent disclosing framework version (S5689)
+app.disable('x-powered-by');
+
 // Configure CORS: restrict to allowed origins
 const corsOptions = {
   origin: (origin, callback) => {
